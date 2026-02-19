@@ -1,22 +1,39 @@
-# Git Issue Resolution Log
+# 🛠 Dev Log: Git & Configuration Issues
 
-## Why it wouldn't upload and commit originally
+This file documents the troubleshooting steps taken to fix the repository structure and configuration.
 
-1. **Large Files (`node_modules`)**: The repository contained `node_modules` folders, which have thousands of dependency files. GitHub rejected the push because these files are too large and numerous.
-2. **History Conflicts**: Because we had to remove these files and rewrite the history to make it clean, your local git history became different from what GitHub expected.
-3. **Missing Upstream Branch**: After resetting the history, Git "forgot" the link between your local `main` branch and the GitHub `main` branch.
+## Issue: Git Push Rejected & Large Files
 
-## How it was fixed (Start to Finish)
+### Problem
+- The initial push was rejected by GitHub.
+- `node_modules` were accidentally included, causing massive file counts and size issues.
+- The local git history became desynchronized from the remote repo after attempts to fix it.
 
-1. **Cleaned the Repository**: Removed `node_modules` from being tracked by Git (added to `.gitignore`).
-2. **Rewrote History**: Created a fresh "Initial commit" that only contains your actual project code, without the clutter.
-3. **Force Pushed**: Overwrote the messy history on GitHub with your clean local version.
-4. **Re-linked Branch**: Ran `git push --set-upstream origin main` to reconnect your local branch to GitHub.
+### Solution (Start to Finish)
+
+1. **Cleaned the Repository**:
+   - Removed `node_modules` from tracking.
+   - Verified `.gitignore` configuration.
+2. **Rewrote History**:
+   - Created a fresh "Initial commit" containing only source code.
+   - This removed the large files from the project history entirely.
+3. **Force Sync**:
+   - Used `git push --force` to overwrite the messy history on GitHub with the clean version.
+   - Re-established the upstream branch link.
+
+## Issue: Hidden .env File
+
+### Problem
+- The `.env` file was not showing up on GitHub.
+- This is standard security behavior (blocked by `.gitignore`).
+
+### Solution
+- Explicitly force-added the file using `git add -f server/.env`.
+- **Note:** This makes the file visible to everyone. Ensure no production secrets are shared if the repo is public.
 
 ## Current Status
-
-- The repository is now **clean and synced**.
-- `node_modules` are ignored (as they should be).
-- You can now use `git add .`, `git commit`, and `git push` normally.
-
-git add . ; git commit -m "Docs: Detailed explanation of error handling and .env usage" ; git push
+- Repository is clean and fully synced.
+- `node_modules` are correctly ignored.
+- `.env` is explicitly tracked.
+- Server and Client error handling has been hardened.
+- git add -f server/.env ; git commit -m "Config: Explicitly adding .env to repository as requested" ; git push
