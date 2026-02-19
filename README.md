@@ -175,4 +175,22 @@ We have updated `server/routes.js` and `server/index.js` to ensure the server do
 The `.env` file in the `server` directory contains sensitive configuration like the `MONGODB_URI`.
 - **Note:** This file is generally **ignored** by Git for security.
 - **However:** If you explicitly want to include it, ensure you do not share your repository publicly if it contains production passwords.
+- **Update:** We have explicitly included `.env` in the repository as per request.
 - We have added custom DNS settings (`8.8.8.8`) in `database.js` to prevent connection timeouts on certain ISPs.
+
+---
+
+## 📜 Project History & Git Troubleshooting
+
+### Why it wouldn't upload and commit originally
+
+1. **Large Files (`node_modules`)**: The repository contained `node_modules` folders, which have thousands of dependency files. GitHub rejected the push because these files are too large and numerous.
+2. **History Conflicts**: Because we had to remove these files and rewrite the history to make it clean, your local git history became different from what GitHub expected.
+3. **Missing Upstream Branch**: After resetting the history, Git "forgot" the link between your local `main` branch and the GitHub `main` branch.
+
+### How it was fixed (Start to Finish)
+
+1. **Cleaned the Repository**: Removed `node_modules` from being tracked by Git (added to `.gitignore`).
+2. **Rewrote History**: Created a fresh "Initial commit" that only contains your actual project code, without the clutter.
+3. **Force Pushed**: Overwrote the messy history on GitHub with your clean local version.
+4. **Re-linked Branch**: Ran `git push --set-upstream origin main` to reconnect your local branch to GitHub.
