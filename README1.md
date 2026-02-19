@@ -18,3 +18,5 @@
 - The repository is now **clean and synced**.
 - `node_modules` are ignored (as they should be).
 - You can now use `git add .`, `git commit`, and `git push` normally.
+
+git add . ; git commit -m "Docs: Detailed explanation of error handling and .env usage" ; git push
