@@ -157,3 +157,22 @@ Since the client and server are separate, we deploy the **Server** and have it s
     -   Add `PORT` with value `5000`.
 
 Render will build both the frontend and backend, then serve the app via the Express server.
+
+---
+
+## 🔧 Recent Improvements & Fixes
+
+### 1. Robust API Error Handling
+We have updated `server/routes.js` and `server/index.js` to ensure the server doesn't crash on database errors.
+- **Fail-Safe Startup:** The server now checks for a MongoDB connection immediately upon startup (`index.js`). If it cannot connect, it exits with a clear error message instead of hanging.
+- **Route Protection:** All API routes (`GET`, `POST`, `PUT`, `DELETE`) are now wrapped in `try-catch` blocks. If an operation fails, the API returns a proper `500` error response to the client instead of crashing the server process.
+
+### 2. Client-Side Resilience
+- The React frontend (`App.jsx`) now includes `try-catch` blocks when fetching data.
+- If the server is offline or returns an error, the app will still load the UI (without crashing with a white screen) and log the specific error to the console for easier debugging.
+
+### 3. Database Configuration (`.env`)
+The `.env` file in the `server` directory contains sensitive configuration like the `MONGODB_URI`.
+- **Note:** This file is generally **ignored** by Git for security.
+- **However:** If you explicitly want to include it, ensure you do not share your repository publicly if it contains production passwords.
+- We have added custom DNS settings (`8.8.8.8`) in `database.js` to prevent connection timeouts on certain ISPs.

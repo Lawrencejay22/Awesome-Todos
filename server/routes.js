@@ -6,17 +6,26 @@ const { ObjectId } = require("mongodb");
 
 const getCollection = () => {
   const client = getConnectedClient();
+  if (!client) {
+    throw new Error("Database not connected");
+  }
   const collection = client.db("todosdb").collection("todos");
   return collection;
 }
 //==========DATABASE TABLE(todos)====================
 
 // GET /todos
+// GET /todos
 router.get("/todos", async (req, res) => {
-  const collection = getCollection();
-  const todos = await collection.find({}).toArray();
+  try {
+    const collection = getCollection();
+    const todos = await collection.find({}).toArray();
 
-  res.status(200).json({ todos });
+    res.status(200).json({ todos });
+  } catch (error) {
+    console.error("GET /todos error:", error);
+    res.status(500).json({ error: error.message });
+  }
 });
 
 // POST /todos
@@ -41,28 +50,40 @@ router.post("/todos", async (req, res) => {
 });
 
 // DELETE /todos/:id
+// DELETE /todos/:id
 router.delete("/todos/:id", async (req, res) => {
-  const collection = getCollection();
-  const _id = new ObjectId(req.params.id);
+  try {
+    const collection = getCollection();
+    const _id = new ObjectId(req.params.id);
 
-  const deleteTodo = await collection.deleteOne({ _id });
+    const deleteTodo = await collection.deleteOne({ _id });
 
-  res.status(200).json(deleteTodo);
+    res.status(200).json(deleteTodo);
+  } catch (error) {
+    console.error("DELETE /todos/:id error:", error);
+    res.status(500).json({ error: error.message });
+  }
 });
 
 // PUT /todos/:id
+// PUT /todos/:id
 router.put("/todos/:id", async (req, res) => {
-  const collection = getCollection();
-  const _id = new ObjectId(req.params.id);
-  const { status } = req.body;
+  try {
+    const collection = getCollection();
+    const _id = new ObjectId(req.params.id);
+    const { status } = req.body;
 
-  if (typeof status !== "boolean") {
-    return res.status(400).json({ mssg: "invalid status" });
+    if (typeof status !== "boolean") {
+      return res.status(400).json({ mssg: "invalid status" });
+    }
+
+    const updatedTodo = await collection.updateOne({ _id }, { $set: { status: !status } });
+
+    res.status(200).json(updatedTodo);
+  } catch (error) {
+    console.error("PUT /todos/:id error:", error);
+    res.status(500).json({ error: error.message });
   }
-
-  const updatedTodo = await collection.updateOne({ _id }, { $set: { status: !status } });
-
-  res.status(200).json(updatedTodo);
 });
 
 module.exports = router;

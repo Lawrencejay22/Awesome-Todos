@@ -8,10 +8,17 @@ export default function App() {
 
   useEffect(() => {
     async function getTodos() {
-      const res = await fetch("/api/todos");
-      const { todos } = await res.json();
-
-      setTodos(todos);
+      try {
+        const res = await fetch("/api/todos");
+        const data = await res.json();
+        if (data.todos) {
+          setTodos(data.todos);
+        } else {
+          console.error("Failed to fetch todos:", data);
+        }
+      } catch (error) {
+        console.error("Error fetching todos:", error);
+      }
     }
     getTodos();
   }, []);
