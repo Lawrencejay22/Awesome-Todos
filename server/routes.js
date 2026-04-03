@@ -12,10 +12,7 @@ const getCollection = () => {
   const collection = client.db("todosdb").collection("todos");
   return collection;
 }
-//==========DATABASE TABLE(todos)====================
 
-// GET /todos
-// GET /todos
 router.get("/todos", async (req, res) => {
   try {
     const collection = getCollection();
@@ -28,7 +25,6 @@ router.get("/todos", async (req, res) => {
   }
 });
 
-// POST /todos
 router.post("/todos", async (req, res) => {
   try {
     const collection = getCollection();
@@ -36,10 +32,7 @@ router.post("/todos", async (req, res) => {
 
     if (!todo) {
       return res.status(400).json({ mssg: "error no todo found" });
-    }
-
-
-
+}
     const newTodo = await collection.insertOne({ todo, status: false });
 
     res.status(201).json({ todo, status: false, _id: newTodo.insertedId });
@@ -49,8 +42,6 @@ router.post("/todos", async (req, res) => {
   }
 });
 
-// DELETE /todos/:id
-// DELETE /todos/:id
 router.delete("/todos/:id", async (req, res) => {
   try {
     const collection = getCollection();
@@ -65,8 +56,6 @@ router.delete("/todos/:id", async (req, res) => {
   }
 });
 
-// PUT /todos/:id
-// PUT /todos/:id
 router.put("/todos/:id", async (req, res) => {
   try {
     const collection = getCollection();
